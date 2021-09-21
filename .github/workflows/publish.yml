@@ -18,8 +18,8 @@ jobs:
           msbuild "src\iovation.LaunchKey.Sdk\iovation.LaunchKey.Sdk.csproj" /m /verbosity:minimal /p:GeneratePackageOnBuild=false
       - name: Package SDK
         run: |
-          dotnet pack "src\iovation.LaunchKey.Sdk.ExampleCli\iovation.LaunchKey.Sdk.ExampleCli.csproj" --configuration Release --no-build
-          dotnet pack "src\iovation.LaunchKey.Sdk\iovation.LaunchKey.Sdk.csproj" --configuration Release --no-build
+          dotnet pack "src\iovation.LaunchKey.Sdk\iovation.LaunchKey.Sdk.csproj" --configuration Release
+          dotnet pack "src\iovation.LaunchKey.Sdk.ExampleCli\iovation.LaunchKey.Sdk.ExampleCli.csproj" --configuration Release
       - name: Run Tests
         run: dotnet test "src\iovation.LaunchKey.Sdk.Tests\iovation.LaunchKey.Sdk.Tests.csproj" --configuration Release --no-build
 #    - name: Publish SDK
