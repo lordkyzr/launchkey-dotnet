@@ -15,7 +15,7 @@ jobs:
       - name: Build SDK
         run: |
           dotnet restore src\iovation.LaunchKey.Sdk.sln
-          msbuild "src\iovation.LaunchKey.Sdk\iovation.LaunchKey.Sdk.sln" /m /verbosity:minimal /p:GeneratePackageOnBuild=false
+          msbuild "src\iovation.LaunchKey.Sdk\iovation.LaunchKey.Sdk.csproj" /m /verbosity:minimal /p:GeneratePackageOnBuild=false
       - name: Package SDK
         run: |
           dotnet pack "src\iovation.LaunchKey.Sdk.ExampleCli\iovation.LaunchKey.Sdk.ExampleCli.csproj" --configuration Release --no-build
