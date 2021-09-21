@@ -5,23 +5,27 @@ on:
       - master
 jobs:
   publish:
-    name: build, pack & publish
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Setup .NET Core SDK ${{ matrix.dotnet-version }}
-      uses: actions/setup-dotnet@v1.7.2
-      with:
-        dotnet-version: 2.1.x
-    - name: Build SDK
-      run: |
-        dotnet build --framework netstandard20 src/iovation.LaunchKey.Sdk
-        dotnet build --framework netcoreapp21 src/iovation.LaunchKey.Sdk.Tests
-
-    - name: Publish SDK
-      uses: brandedoutcast/publish-nuget@v2.5.5
-      with:
-        PACKAGE_NAME: iovation.LaunchKey.Sdk
-        PROJECT_FILE_PATH: src/iovation.LaunchKey.Sdk/iovation.LaunchKey.Sdk.csproj
-        TAG_COMMIT: false
-        NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+      - uses: actions/checkout@v2
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v1.0.2
+      - name: Setup NuGet
+        uses: NuGet/setup-nuget@v1.0.5
+      - name: Build SDK
+        run: |
+          dotnet restore src\iovation.LaunchKey.Sdk.sln
+          msbuild "src\iovation.LaunchKey.Sdk.sln" /m /verbosity:minimal /p:GeneratePackageOnBuild=false
+      - name: Package SDK
+        run: |
+          dotnet pack "src\iovation.LaunchKey.Sdk.ExampleCli\iovation.LaunchKey.Sdk.ExampleCli.csproj" --configuration Release --no-build
+          dotnet pack "src\iovation.LaunchKey.Sdk\iovation.LaunchKey.Sdk.csproj" --configuration Release --no-build
+      - name: Run Tests
+        run: dotnet test "src\iovation.LaunchKey.Sdk.Tests\iovation.LaunchKey.Sdk.Tests.csproj" --configuration Release --no-build
+#    - name: Publish SDK
+#      uses: brandedoutcast/publish-nuget@v2.5.5
+#      with:
+#        PACKAGE_NAME: iovation.LaunchKey.Sdk
+#        PROJECT_FILE_PATH: src/iovation.LaunchKey.Sdk/iovation.LaunchKey.Sdk.csproj
+#        TAG_COMMIT: false
+#        NUGET_KEY: ${{secrets.NUGET_API_KEY}}
